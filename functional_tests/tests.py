@@ -1,10 +1,10 @@
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+
 import time
 
-import unittest
-
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -21,7 +21,7 @@ class NewVisitorTest(unittest.TestCase):
     def test_can_start_a_list_and_retrieve_it_later(self):
         # Edith has heard about a cool new online to-do app. She goes
         # to check out its homepage
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
 
         # She notices the page title and header mention to-do lists
         self.assertIn('To-Do', self.browser.title)
@@ -42,6 +42,11 @@ class NewVisitorTest(unittest.TestCase):
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
 
+        edith_list_url = self.browser.current_url
+        self.assertRegex(edith_list_url, '/list/.+')
+
+        self.check_for_row_in_list_table('1: Buy peacock feathers')
+
         # There is still a text box inviting her to add another item. She
         # enters "Use peacock feathers to make a fly" (Edith is very
         # methodical)
@@ -56,9 +61,41 @@ class NewVisitorTest(unittest.TestCase):
         # Edith wonders whether the site will remember her list. Then she sees
         # that the site has generated a unique URL for her -- there is some
         # explanatory text to that effect.
-        self.fail('Finish the test!')
 
-        # She visits that URL - her to-do list is still there.o make a fly', [row.text for row in rows])
 
-if __name__ == '__main__':
-    unittest.main(warnings='ignore')
+
+        # Now a new user, Francis, comes along to the site.
+
+        ## We use a new browser session to make sure that no information
+        ## of Edith's is coming through from cookies etc #1
+
+        self.browser.quit()
+        self.browser.webdriver.Firefox()
+
+        # Francis visits the home page.  There is no sign of Edith's
+        # list
+
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_tag_name('body')
+
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertNotIn('make a fly', page_text)
+
+        # Francis starts a new list by entering a new item. He
+        # is less interesting than Edith...
+
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Buy Milk')
+        inputbox.send_keys(Keys.ENTER)
+
+        # Francis gets his own unique URL
+        francis_list_url = self.browser.current_url
+        self.assertRegex(francis_list_url, '/list/.+')
+
+        # Again, there is no trace of Edith's list
+        page_text = self.browser.find_element_by_tag_name('body')
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertIn('Buy Milk', page_text)
+
+        # Satisfied, they both go back to sleep
+
