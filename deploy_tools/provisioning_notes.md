@@ -37,19 +37,23 @@ Assume we have a user account at /home/username
 
 
 ## Deploy
-Rename with rigth configuration path
-
-```
-sed "s/SITENAME/superlists.mecanalytics.com/g" \
-    deploy_tools/nginx.template.conf | sudo tee \
-    /etc/nginx/sites-available/superlists.mecanalytics.com
+Replace `SITENAME` in config files with the right `staging.my-domain.com`
 
 
-sudo ln -s ../sites-available/superlists.mecanalytics.com \
-    /etc/nginx/sites-enabled/superlists.mecanalytics.com
+    $ sed "s/SITENAME/staging.my-domain.com/g" \
+        deploy_tools/nginx.template.conf | sudo tee \
+        /etc/nginx/sites-available/staging.my-domain.com
 
 
-sed "s/SITENAME/superlists.mecanalytics.com/g" \
-    deploy_tools/gunicorn-upstart.template.conf | sudo tee \
-    /etc/init/gunicorn-superlists.mecanalytics.com.conf
-```
+    $ sudo ln -s ../sites-available/staging.my-domain.com \
+        /etc/nginx/sites-enabled/staging.my-domain.com
+
+
+    $ sed "s/SITENAME/staging.my-domain.com/g" \
+        deploy_tools/gunicorn-upstart.template.conf | sudo tee \
+        /etc/init/gunicorn-staging.my-domain.com.conf
+
+Reload **nginx** and **gunicorn**
+
+    $ sudo service nginx reload
+    $ sudo start gunicorn-staging.my-domain.com
