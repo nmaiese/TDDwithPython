@@ -34,3 +34,22 @@ Assume we have a user account at /home/username
          ├── source
          ├── static
          └── virtualenv
+
+
+## Deploy
+Rename with rigth configuration path
+
+```
+sed "s/SITENAME/superlists.mecanalytics.com/g" \
+    deploy_tools/nginx.template.conf | sudo tee \
+    /etc/nginx/sites-available/superlists.mecanalytics.com
+
+
+sudo ln -s ../sites-available/superlists.mecanalytics.com \
+    /etc/nginx/sites-enabled/superlists.mecanalytics.com
+
+
+sed "s/SITENAME/superlists.mecanalytics.com/g" \
+    deploy_tools/gunicorn-upstart.template.conf | sudo tee \
+    /etc/init/gunicorn-superlists.mecanalytics.com.conf
+```
