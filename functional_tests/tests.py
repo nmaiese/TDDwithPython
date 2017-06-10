@@ -23,7 +23,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
 
     def setUp(self):
-        self.browser = webdriver.PhantomJS()
+        self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(4)
 
     def tearDown(self):
@@ -83,7 +83,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         ## We use a new browser session to make sure that no information
         ## of Edith's is coming through from cookies etc #1
         self.browser.quit()
-        self.browser = webdriver.PhantomJS()
+        self.browser = webdriver.Firefox()
 
         # Francis visits the home page.  There is no sign of Edith's
         # list
