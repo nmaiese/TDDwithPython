@@ -22,7 +22,7 @@ class FunctionalTest(StaticLiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(4)
+        self.browser.implicitly_wait(20)
 
     def tearDown(self):
         self.browser.quit()
