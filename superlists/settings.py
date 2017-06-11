@@ -23,12 +23,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'xyd4py$ujdh#v_=*mlq-@6hf+e)(g1j01k#qpimx(t6ccn&c+5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 TEMPLATE_DEBUG = DEBUG
 
 # Needed when DEBUG=False
-ALLOWED_HOSTS = ['superlists-staging.mecanalytics.com']
+ALLOWED_HOSTS = []
 
 
 # Application definition
